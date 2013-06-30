@@ -15,9 +15,9 @@ Gem::Specification.new do |gem|
   gem.summary       = %q{A simple gatekeeper for Git over SSH}
   gem.homepage      = "https://github.com/nzaillian/marcellus"
 
-  gem.add_dependency('rspec', '>= 2.13.0')
-  gem.add_dependency('activesupport', '>= 3.1')
-  gem.add_dependency('psych', '>= 2.0.0')
+  gem.add_dependency('rspec')
+  gem.add_dependency('activesupport')
+  gem.add_dependency('psych')
 
 
   gem.files         = Dir["**/*.*"]
