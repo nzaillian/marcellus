@@ -4,9 +4,11 @@ lib = File.expand_path('../lib', __FILE__)
 
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
+require 'marcellus/version'
+
 Gem::Specification.new do |gem|
   gem.name          = "marcellus"
-  gem.version       = '0.2'
+  gem.version       = Marcellus::VERSION
   gem.authors       = ["Written Software"]
   gem.email         = ["contact@writtensoftware.com"]
   gem.description   = %q{A simple gatekeeper for Git over SSH}

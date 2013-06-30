@@ -1,6 +1,30 @@
+require "optparse"
+
 module Marcellus
   class Runner
     def initialize
+
+      options = {}
+
+      banner = "\nMarcellus v:#{Marcellus::VERSION}\n\n"
+
+      OptionParser.new do |opts|
+        opts.on_tail("-h", "--help") do
+          options[:help] = true
+        end
+      end.parse!
+
+      if options[:help]
+        puts banner
+        Help.print_help  
+        return
+      end
+
+      if ! ARGV[1]
+        puts banner + "run \"marcellus --help\" for a list of commands\n\n"
+        return
+      end
+
       
       if ARGV[0] == "authorize"
         authorize_and_run_command
