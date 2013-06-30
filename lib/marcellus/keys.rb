@@ -9,6 +9,8 @@ module Marcellus
       def add(user, key, opts={})
         opts = {flush: true}.merge(opts)
 
+        read_keys
+
         @@keys[user] ||= []
         @@keys[user] << key unless @@keys[user].include?(key)
         
@@ -22,7 +24,15 @@ module Marcellus
       def remove(user, key, opts={})
         opts = {flush: true}.merge(opts)
 
-        @@keys[user].delete(key) if @@keys[user]
+        read_keys
+
+        if @@keys[user]
+          @@keys[user].delete(key)
+
+          if @@keys[user].empty?
+            @@keys.delete(user)
+          end
+        end
 
         save_keys
 
@@ -62,6 +72,12 @@ module Marcellus
       # read the user-key mappings (from YAML-serialized structure)
       def read_keys(opts={})
         if !defined?(@@keys) || !@@keys || key_file_changed?
+
+          if ! File.exists?(key_file_path)
+            @@keys = {}
+            return
+          end
+
           key_file = File.new(key_file_path, 'r')
           
           @@keys = YAML::load(key_file.read)
@@ -106,10 +122,5 @@ module Marcellus
       end
 
     end
-
-    
-    ### Class initialization
-    read_keys
-
   end
 end
