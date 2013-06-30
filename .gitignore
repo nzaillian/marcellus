@@ -4,3 +4,5 @@
 .idea
 !/data/.gitkeep
 !/spec/data/.gitkeep
+Gemfile.lock
+.zeus.sock
