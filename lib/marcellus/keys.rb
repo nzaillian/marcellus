@@ -6,7 +6,7 @@ module Marcellus
     class << self # class methods
 
       def add(user, key, opts={})
-        opts[:flush] = true if opts[:flush] == nil
+        opts = {flush: true}.merge(opts)
 
         @@keys[user] ||= []
         @@keys[user] << key unless @@keys[user].include?(key)
@@ -19,7 +19,7 @@ module Marcellus
       end
 
       def remove(user, key, opts={})
-        opts[:flush] = true if opts[:flush] == nil
+        opts = {flush: true}.merge(opts)
 
         @@keys[user].delete(key) if @@keys[user]
 
@@ -36,6 +36,8 @@ module Marcellus
 
       private
 
+      # save the user-key mappings to a YAML-serialized structure
+      # (not the authorized_keys file)
       def save_keys
         key_file = File.open(key_file_path, 'w')
 
@@ -44,6 +46,7 @@ module Marcellus
         key_file.close
       end
 
+      # read the user-key mappings (from YAML-serialized structure)
       def read_keys
         if !defined?(@@keys) || !@@keys
           key_file = File.new(key_file_path, 'r')

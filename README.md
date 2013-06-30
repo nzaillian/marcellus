@@ -11,6 +11,7 @@ per-repo access policies for different clients based on their public keys
 manage users via a command line utility or through a Ruby interface.
 
 ### How it does it
+
 One of my motivations for creating this tool was the difficulty I had hacking
 gitolite. I've tried to keep the operation of this tool easy to understand. 
 Marcellus is really just a collection of simple utilities.
@@ -28,11 +29,23 @@ If you open it after adding some keys through Marcellus you'll find lines like
 
   command="/home/git/marcellus/bin/marcellus authenticate joesmith", [other options] ssh-rsa [user's public key]
 
-This means that when user "joesmith" logs in the command "bin/marcellus" (relative to install root) is executed. As explained above, it has access to the original command issues to the ssh endpoint in the "SSH\_ORIGINAL\_COMMAND" environment variable, so it can choose whether to shell out and execute it (allow repo access) or ignore it (effectively deny repo access). How does it know what to do?
+This means that when user "joesmith" logs in the command "bin/marcellus" (relative to install root) is executed. As explained above, it has access to the original command issues to the ssh endpoint in the "SSH\_ORIGINAL\_COMMAND" environment variable, so it can choose whether to shell out and execute it with git shell (allow repo access) or ignore it (effectively deny repo access). How does it know what to do?
 
 First, it parses out the repo path from the command issued by the user. It then 
 checks the target repo for a special file called ".mc-access". This file (also
 managed by Marcellus) contains a serialized list of the users who we can consider
-to have granted access to the repo. If Marcellus sees the client user in that 
-list, it will allow access (shelling out and executing the command). 
+to have granted access to the repo and their permissions ([:r], [:w] or [:r, :w]). If Marcellus sees the client user in that 
+list and he has appropriate permissions, it will allow access (execute original command in git shell). 
 If not, it will deny it. That's it.
+
+### Library
+
+The supplied runner script (bin/marcellus) is a thin wrapper around functionality defined
+in the modules in the "lib" directory.
+
+### Configuration
+
+You can find Marcellus' default path and shell options set in lib/marcellus/configuration.rb.You override Marcellus' defaults by dropping a file called ".marcellus-rc" in the "git" user's home directory. You can write a plain ruby tho this file (refer to lib/marcellus/configuration.rb for the available configuration options). For example:
+
+    Marcellus::config.authorized_keys_path = "/home/git/.ssh/authorized_keys"
+    Marcellus::config.repo_root = "/home/git/repositories"

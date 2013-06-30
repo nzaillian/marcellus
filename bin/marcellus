@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
 
-require_relative "../lib/paths"
+require_relative "../lib/marcellus"
 
 Marcellus::Runner.new

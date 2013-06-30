@@ -2,7 +2,7 @@ module Marcellus
   class Guard
     class << self
       
-      def authorize(user, repo)
+      def authorize(user, repo, requested_permission)
         
         raise "no user provided" unless user
         raise "no repo provided" unless repo
@@ -10,7 +10,13 @@ module Marcellus
         repo_users = Repo.users(repo)
 
         if repo_users.include?(user)
-          true
+          user_permissions = repo_users[user]
+
+          if user_permissions && user_permissions.include?(requested_permission)
+            true
+          else
+            false
+          end
         else
           false
         end
