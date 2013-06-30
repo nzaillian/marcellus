@@ -14,11 +14,13 @@ manage users via a command line utility or through a Ruby interface.
 
 One of my motivations for creating this tool was the difficulty I had hacking
 gitolite. I've tried to keep the operation of this tool easy to understand. 
-Marcellus is really just a collection of simple utilities.
+Marcellus is really just a collection of simple utilities. I strongly
+encourage you to read all of the implementation outline below if you plan
+on using Marcellus.
 
-Marcellus relies on openSSH's "forced command" feature.
+Marcellus is built atop openSSH's "forced command" feature.
 If you prefix "command=&lt;command&gt;" to any of the lines containing public keys in 
-the "authorized\_keys" file sshd is reading from to authenticate the "git" user, the 
+the "authorized\_keys" file sshd reads from to authenticate the "git" user, the 
 specified command will run after the user is authenticated. SSH will also add an environment
 variable named "SSH\_ORIGINAL\_COMMAND" containing the user's original command
 to the environment in which the command (in the line of the authorized\_keys file) is
@@ -29,7 +31,7 @@ If you open it after adding some keys through Marcellus you'll find lines like
 
   command="/home/git/marcellus/bin/marcellus authenticate joesmith", [other options] ssh-rsa [user's public key]
 
-This means that when user "joesmith" logs in the command "bin/marcellus" (relative to install root) is executed. As explained above, it has access to the original command issues to the ssh endpoint in the "SSH\_ORIGINAL\_COMMAND" environment variable, so it can choose whether to shell out and execute it with git shell (allow repo access) or ignore it (effectively deny repo access). How does it know what to do?
+This means that when user "joesmith" logs in the command "bin/marcellus" (relative to install root) is executed. As explained above, it has access to the original command issued to the ssh endpoint in the "SSH\_ORIGINAL\_COMMAND" environment variable, so it can choose whether to shell out and execute it with git shell (allow repo access) or ignore it (effectively deny repo access). How does it know what to do?
 
 First, it parses out the repo path from the command issued by the user. It then 
 checks the target repo for a special file called ".mc-access". This file (also
@@ -41,7 +43,9 @@ If not, it will deny it. That's it.
 ### Library
 
 The supplied runner script (bin/marcellus) is a thin wrapper around functionality defined
-in the modules in the "lib" directory.
+in the modules in the "lib" directory. If you'd like to peroform any of the actions
+that you can through the CLI, refer to the contents of "bin/marcellus" to see how to
+do the same with the library modules
 
 ### Configuration
 

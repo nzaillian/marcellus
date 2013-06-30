@@ -2,8 +2,9 @@ require 'yaml'
 
 module Marcellus
   class Keys
-    
     class << self # class methods
+
+      @@last_key_file_path = ::Marcellus::config.key_storage_location
 
       def add(user, key, opts={})
         opts = {flush: true}.merge(opts)
@@ -34,6 +35,18 @@ module Marcellus
         flush_to_authorized_keys
       end
 
+      def key_file_path
+        ::Marcellus::config.key_storage_location
+      end
+
+      def authorized_keys_path
+        ::Marcellus::config.authorized_keys_path
+      end
+
+      def reload_keys
+        read_keys(force: true)
+      end
+
       private
 
       # save the user-key mappings to a YAML-serialized structure
@@ -47,8 +60,8 @@ module Marcellus
       end
 
       # read the user-key mappings (from YAML-serialized structure)
-      def read_keys
-        if !defined?(@@keys) || !@@keys
+      def read_keys(opts={})
+        if !defined?(@@keys) || !@@keys || key_file_changed?
           key_file = File.new(key_file_path, 'r')
           
           @@keys = YAML::load(key_file.read)
@@ -83,12 +96,13 @@ module Marcellus
         end
       end
 
-      def key_file_path
-        ::Marcellus::config.key_storage_location
-      end
-
-      def authorized_keys_path
-        ::Marcellus::config.authorized_keys_path
+      def key_file_changed?
+        if key_file_path != @@last_key_file_path
+          @@last_key_file_path = key_file_path
+          true
+        else
+          false
+        end
       end
 
     end

@@ -5,7 +5,10 @@ module Marcellus
     class << self
       def add_user(repo_path, user, permissions_string=nil)
 
-        raise "Supplied repo path seems to be invalid" unless File.exists?(repo_path)
+        unless File.exists?(repo_path)
+          raise "Supplied repo path seems to be invalid (hint: maybe you've " +
+                "supplied a relative path instead of absolute?)"
+        end
 
         repo_users = users(repo_path)
 

@@ -1,2 +1,6 @@
-/data
 .DS_Store
+/data/*
+/spec/data/*
+.idea
+!/data/.gitkeep
+!/spec/data/.gitkeep
