@@ -7,6 +7,9 @@ module Marcellus
       @@last_key_file_path = ::Marcellus::config.key_storage_location
 
       def add(user, key, opts={})
+        raise "no user supplied to Keys#add" if user.blank?
+        raise "no key supplied to Keys#add" if key.blank?
+
         opts = {flush: true}.merge(opts)
 
         read_keys
@@ -22,6 +25,9 @@ module Marcellus
       end
 
       def remove(user, key, opts={})
+        raise "no user supplied to Keys#remove" if user.blank?
+        raise "no key supplied to Keys#remove" if key.blank?
+
         opts = {flush: true}.merge(opts)
 
         read_keys

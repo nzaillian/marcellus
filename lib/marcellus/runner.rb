@@ -20,7 +20,7 @@ module Marcellus
         return
       end
 
-      if ! ARGV[1]
+      if ! ARGV[0]
         puts banner + "run \"marcellus --help\" for a list of commands\n\n"
         return
       end
