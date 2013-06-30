@@ -3,6 +3,7 @@
 /spec/data/*
 .idea
 !/data/.gitkeep
+!/spec/data/test_repo_root/.gitkeep
 !/spec/data/.gitkeep
 Gemfile.lock
 .zeus.sock
