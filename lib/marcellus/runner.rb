@@ -3,7 +3,7 @@ module Marcellus
     def initialize
       
       if ARGV[0] == "authorize"
-        Authorize.new
+        Guard.authorize!(ARGV[1], ARGV[2])
       
       elsif ARGV[0] == "addkey"
         Keys.add(ARGV[1], ARGV[2])
